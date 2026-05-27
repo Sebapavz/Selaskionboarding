@@ -31,7 +31,7 @@
   // ============================================================
   var VID = {
     master: {
-      empresas:  null,   // Paso 1: Gestión de empresas
+      empresas:  https://youtu.be/gvH_Q6jX6cY,   // Paso 1: Gestión de empresas
       cuenta:    null,   // Paso 2: Configuración de cuenta
       usuarios:  null,   // Paso 3: Usuarios secundarios
       contactos: null,   // Paso 4: Contactos
