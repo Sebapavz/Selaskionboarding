@@ -1,5 +1,5 @@
 /**
- * Selaski Onboarding Guide — v1.2
+ * Selaski Onboarding Guide — v1.3
  * VIDEO_URLS: reemplaza null con 'https://www.youtube.com/embed/ID'
  */
 (function () {
@@ -60,7 +60,6 @@
     {id:'embarques',title:'Embarques',path:'Módulo Embarques > Listado de embarques',block:'ops',bl:'Operaciones',desc:'Ver y gestionar los embarques activos: tracking, carga, costos, aduana y documentos según el acceso asignado.',actions:[{t:'Verificar estado y tracking de cada embarque'},{t:'Revisar carga contenerizada y gestión de productos'},{t:'Consultar costos y flujo de caja si tienes acceso'}]},
     {id:'documentos',title:'Documentos',path:'Módulo Documentos > Listado de documentos',block:'ops',bl:'Operaciones',desc:'Ver el estado de todos los documentos. Cargar, revisar o descargar según el permiso asignado en el flujo documental.',actions:[{t:'Revisar documentos pendientes y sus fechas de vencimiento'},{t:'Cargar documentos asignados a tu responsabilidad'},{t:'Usar la burbuja de chat para comentar o solicitar cambios en un documento'}],tip:'Solo puedes gestionar los documentos en los que el master te definió como responsable.'},
     {id:'reportes',title:'Reportes y accesos compartidos',path:'Módulo Reportes II > Agregar responsable',block:'ops',bl:'Operaciones',desc:'Compartir información con equipos externos o internos mediante un link de acceso protegido con PIN.',actions:[{t:'Crear un responsable ingresando nombre y email'},{t:'Asignar informes: embarques, productos, carga, órdenes, finanzas, documentos'},{t:'Personalizar y filtrar la información visible en cada reporte antes de compartir'},{t:'Compartir el link — el responsable recibe el PIN por correo para acceder'}],tip:'El responsable puede guardar el link en favoritos para consultar sin ingresar a Selaski.'}
-]}
   ];
 
   var BC={config:'slk-bc',maestros:'slk-bm',reglas:'slk-br',ops:'slk-bo',access:'slk-ba'};
@@ -81,19 +80,26 @@
     '#slk-root{position:fixed;z-index:2147483647;font-family:"DM Sans",-apple-system,sans-serif;user-select:none;}',
     '#slk-root *{box-sizing:border-box;margin:0;padding:0;font-family:"DM Sans",-apple-system,sans-serif;}',
     '#slk-root .slk-panel{width:'+W+'px;height:min(700px,calc(100vh - 80px));background:#fff;border:1px solid #dde2ee;border-radius:12px;box-shadow:0 8px 32px rgba(31,51,94,.18);display:flex;flex-direction:column;overflow:hidden;}',
+    /* MINI */
     '#slk-root .slk-mini{width:64px;background:#1F335E;border-radius:12px;box-shadow:0 4px 16px rgba(31,51,94,.25);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 6px;gap:4px;}',
     '#slk-root .slk-mini:hover{opacity:.88;}',
     '#slk-root .slk-mini img{height:18px;width:52px;object-fit:contain;mix-blend-mode:screen;}',
     '#slk-root .slk-mini-badge{background:#FF8D3D;color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:99px;white-space:nowrap;}',
-    '#slk-root .slk-hd{background:#1F335E;padding:9px 12px;display:flex;align-items:center;gap:8px;flex-shrink:0;border-radius:11px 11px 0 0;cursor:grab;}',
-    '#slk-root .slk-hd:active{cursor:grabbing;}',
-    '#slk-root .slk-logo{height:22px;mix-blend-mode:screen;flex:1;object-fit:contain;object-position:left;pointer-events:none;}',
-    '#slk-root .slk-icon-btn{background:rgba(255,255,255,.1);border:none;color:#fff;width:24px;height:24px;border-radius:5px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;transition:background .15s;}',
-    '#slk-root .slk-icon-btn:hover{background:rgba(255,255,255,.22);}',
+    /* HEADER */
+    '#slk-root .slk-hd{background:#1F335E;padding:9px 12px;display:flex;align-items:center;gap:8px;flex-shrink:0;border-radius:11px 11px 0 0;}',
+    /* DRAG AREA — the zone with the move icon */
+    '#slk-root .slk-drag{flex:1;display:flex;align-items:center;gap:6px;cursor:move;height:100%;}',
+    '#slk-root .slk-drag i{color:rgba(255,255,255,.5);font-size:16px;}',
+    '#slk-root .slk-drag:active{cursor:move;}',
+    /* LOGO — minimizes on click */
+    '#slk-root .slk-logo{height:22px;width:52px;object-fit:contain;mix-blend-mode:screen;cursor:pointer;flex-shrink:0;opacity:1;transition:opacity .15s;}',
+    '#slk-root .slk-logo:hover{opacity:.75;}',
+    /* TABS */
     '#slk-root .slk-tabs{display:flex;padding:4px;gap:3px;background:#f0f3f9;border-bottom:1px solid #dde2ee;flex-shrink:0;}',
     '#slk-root .slk-tab{flex:1;padding:5px;border:none;background:transparent;border-radius:4px;font-size:11px;color:#5a6a8a;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;transition:all .15s;font-family:inherit;}',
     '#slk-root .slk-tab.slk-ta{background:#1F335E;color:#fff;}',
     '#slk-root .slk-tab i{font-size:14px;}',
+    /* PROGRESS */
     '#slk-root .slk-prog{display:flex;align-items:center;padding:7px 10px;gap:0;flex-shrink:0;background:#f9fafc;border-bottom:1px solid #dde2ee;overflow-x:auto;}',
     '#slk-root .slk-prog::-webkit-scrollbar{height:2px;}',
     '#slk-root .slk-dot{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;flex-shrink:0;border:1.5px solid #dde2ee;background:#fff;color:#8a9abb;cursor:pointer;transition:all .15s;}',
@@ -102,14 +108,17 @@
     '#slk-root .slk-dot.slk-ds{background:#f4f6fa;border-color:#dde2ee;color:#dde2ee;cursor:default;}',
     '#slk-root .slk-ln{flex:1;height:2px;background:#dde2ee;min-width:3px;}',
     '#slk-root .slk-ln.slk-ld{background:#1D9E75;}',
+    /* BODY */
     '#slk-root .slk-body{flex:1;overflow-y:auto;min-height:0;}',
     '#slk-root .slk-body::-webkit-scrollbar{width:3px;}',
     '#slk-root .slk-body::-webkit-scrollbar-thumb{background:#dde2ee;border-radius:2px;}',
+    /* VIDEO */
     '#slk-root .slk-vw{aspect-ratio:16/9;background:#1F335E;position:relative;flex-shrink:0;}',
     '#slk-root .slk-vw iframe{width:100%;height:100%;border:none;display:block;}',
     '#slk-root .slk-vp{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;}',
     '#slk-root .slk-vpi{width:36px;height:36px;border-radius:50%;background:rgba(255,141,61,.15);border:1.5px solid rgba(255,141,61,.3);display:flex;align-items:center;justify-content:center;color:#FF8D3D;font-size:16px;}',
     '#slk-root .slk-vpt{color:rgba(255,255,255,.4);font-size:10px;}',
+    /* CARD */
     '#slk-root .slk-card{padding:11px;}',
     '#slk-root .slk-btag{display:inline-block;font-size:9px;font-weight:700;padding:2px 7px;border-radius:99px;margin-bottom:7px;letter-spacing:.04em;text-transform:uppercase;}',
     '#slk-root .slk-bc{background:rgba(30,158,166,.12);color:#1E9EA6;}',
@@ -130,18 +139,23 @@
     '#slk-root .slk-tip{background:rgba(29,158,117,.08);border-left:2px solid #1D9E75;color:#0F6E56;}',
     '#slk-root .slk-warn{background:rgba(255,141,61,.08);border-left:2px solid #FF8D3D;color:#9B4F00;}',
     '#slk-root .slk-tip i,#slk-root .slk-warn i{font-size:12px;flex-shrink:0;margin-top:1px;}',
+    /* CONDITIONAL */
     '#slk-root .slk-cond{text-align:center;padding:14px 10px;}',
     '#slk-root .slk-cq{font-size:12px;font-weight:600;color:#1F335E;margin-bottom:6px;line-height:1.4;}',
     '#slk-root .slk-cd{font-size:10.5px;color:#5a6a8a;margin-bottom:14px;line-height:1.6;}',
     '#slk-root .slk-cbtns{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;}',
     '#slk-root .slk-cy{padding:7px 12px;border:none;background:#FF8D3D;color:#fff;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;font-family:inherit;}',
     '#slk-root .slk-cn{padding:7px 12px;border:1px solid #dde2ee;background:#fff;color:#5a6a8a;border-radius:5px;font-size:11px;cursor:pointer;font-family:inherit;}',
+    /* FOOTER */
     '#slk-root .slk-ft{display:flex;justify-content:space-between;align-items:center;padding:7px 11px;border-top:1px solid #dde2ee;background:#fff;flex-shrink:0;border-radius:0 0 11px 11px;}',
     '#slk-root .slk-prev,#slk-root .slk-next{padding:5px 10px;border-radius:5px;border:1px solid #dde2ee;background:#fff;color:#1F335E;font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;font-family:inherit;transition:all .15s;}',
     '#slk-root .slk-prev:hover,#slk-root .slk-next:hover{background:#f4f6fa;}',
     '#slk-root .slk-next.slk-np{background:#1F335E;border-color:#1F335E;color:#fff;}',
     '#slk-root .slk-next.slk-np:hover{background:#162647;}',
-    '#slk-root .slk-prev:disabled,#slk-root .slk-next:disabled{opacity:.3;cursor:default;}'
+    /* LISTO — orange, closes widget */
+    '#slk-root .slk-next.slk-done{background:#FF8D3D;border-color:#FF8D3D;color:#fff;}',
+    '#slk-root .slk-next.slk-done:hover{background:#e67a2a;}',
+    '#slk-root .slk-prev:disabled{opacity:.3;cursor:default;}'
   ].join('');
   document.head.appendChild(st);
 
@@ -150,7 +164,7 @@
   root.id='slk-root';
   document.body.appendChild(root);
 
-  // --- POSITIONING (side-aware) ---
+  // --- POSITIONING ---
   function applyPos(){
     var top=Math.max(8,Math.min(window.innerHeight-80,G.top||72));
     root.style.top=top+'px';
@@ -165,11 +179,10 @@
   applyPos();
   window.addEventListener('resize',applyPos);
 
-  // --- DRAG ---
+  // --- DRAG (attached to .slk-drag area only) ---
   var dragging=false,dox=0,doy=0;
   function startDrag(e){
     if(e.button!==undefined&&e.button!==0)return;
-    if(e.target.closest('button')||e.target.closest('.slk-tab'))return;
     dragging=true;
     var r=root.getBoundingClientRect();
     dox=e.clientX-r.left;
@@ -191,8 +204,6 @@
     dragging=false;
     var r=root.getBoundingClientRect();
     var centerX=r.left+r.width/2;
-    var top=r.top;
-    // Snap side based on which half of screen
     if(centerX>window.innerWidth/2){
       G.side='right';
       G.offset=Math.max(0,window.innerWidth-r.right);
@@ -204,14 +215,12 @@
       root.style.left=G.offset+'px';
       root.style.right='auto';
     }
-    G.top=top;
+    G.top=r.top;
     save();
     document.removeEventListener('mousemove',onDrag);
     document.removeEventListener('mouseup',stopDrag);
   }
-  /* Touch */
   function startTouch(e){
-    if(e.target.closest('button')||e.target.closest('.slk-tab'))return;
     var t=e.touches[0];
     dragging=true;
     var r=root.getBoundingClientRect();
@@ -258,6 +267,7 @@
     var total=steps.length-G.skipped[G.tab].length;
     var vIdx=idx-skipCount;
     var videoUrl=VID[G.tab][s.id];
+    var isLast=idx===steps.length-1;
     var h='';
 
     if(!G.open){
@@ -273,11 +283,15 @@
       return;
     }
 
+    // Header: logo near edge, drag area on the other side
+    var logoEl='<img class="slk-logo" src="'+LOGO+'" alt="Selaski" id="btn-logo" title="Minimizar">';
+    var dragEl='<div class="slk-drag" id="slk-drag"><i class="ti ti-arrows-move" aria-hidden="true"></i></div>';
+    var hdContent = G.side==='right'
+      ? dragEl+logoEl   // logo near right edge
+      : logoEl+dragEl;  // logo near left edge
+
     h='<div class="slk-panel">';
-    h+='<div class="slk-hd" id="slk-hd">';
-    h+='<img class="slk-logo" src="'+LOGO+'" alt="Selaski">';
-    h+='<button class="slk-icon-btn" id="btn-min" title="Minimizar"><i class="ti ti-minus"></i></button>';
-    h+='</div>';
+    h+='<div class="slk-hd">'+hdContent+'</div>';
 
     h+='<div class="slk-tabs">';
     h+='<button class="slk-tab'+(G.tab==='master'?' slk-ta':'')+'" data-tab="master"><i class="ti ti-settings"></i>Master</button>';
@@ -326,20 +340,30 @@
     h+='<div class="slk-ft">';
     h+='<button class="slk-prev"'+(idx===0?' disabled':'')+' id="btn-prev"><i class="ti ti-arrow-left"></i>Anterior</button>';
     h+='<span style="font-size:10px;color:#8a9abb;">'+(isPending?'':(vIdx+1)+' / '+total)+'</span>';
-    if(idx<steps.length-1){
+    if(!isLast){
       h+='<button class="slk-next slk-np" id="btn-next">Siguiente<i class="ti ti-arrow-right"></i></button>';
     } else {
-      h+='<button class="slk-next" disabled><i class="ti ti-circle-check"></i>Listo</button>';
+      h+='<button class="slk-next slk-done" id="btn-done"><i class="ti ti-circle-check"></i>Listo</button>';
     }
     h+='</div></div>';
 
     root.innerHTML=h;
 
-    var hd=document.getElementById('slk-hd');
-    if(hd){hd.addEventListener('mousedown',startDrag);hd.addEventListener('touchstart',startTouch,{passive:true});}
+    // Logo → minimize
+    document.getElementById('btn-logo').onclick=function(){G.open=false;save();render();};
 
-    document.getElementById('btn-min').onclick=function(){G.open=false;save();render();};
+    // Drag area
+    var drag=document.getElementById('slk-drag');
+    if(drag){
+      drag.addEventListener('mousedown',startDrag);
+      drag.addEventListener('touchstart',startTouch,{passive:true});
+    }
 
+    // Listo → close
+    var done=document.getElementById('btn-done');
+    if(done)done.onclick=function(){G.open=false;save();render();};
+
+    // Anterior
     var prev=document.getElementById('btn-prev');
     if(prev)prev.onclick=function(){
       var pi=G.step[G.tab]-1;
@@ -350,6 +374,8 @@
       }
       G.step[G.tab]=pi;save();render();
     };
+
+    // Siguiente
     var next=document.getElementById('btn-next');
     if(next)next.onclick=function(){G.step[G.tab]++;save();render();};
 
